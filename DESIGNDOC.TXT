@@ -36,16 +36,25 @@ Steven Cruttenden
 >> `struct' member, global or static variable, `typedef', or
 >> enumeration.  Identify the purpose of each in 25 words or less.
 
+	None as of now.
+
 ---- ALGORITHMS ----
 
 >> A2: Briefly describe how you implemented argument parsing.  How do
 >> you arrange for the elements of argv[] to be in the right order?
 >> How do you avoid overflowing the stack page?
 
+	First the string is modifitied to get rid of any extra white spaces. Then the agrs are copied 
+	to make sure that nothing will get currupted and both are put into an array on the stack 
+	to be called in order. If the page overflows then the process will kill itself.
+
 ---- RATIONALE ----
 
 >> A3: Why does Pintos implement strtok_r() but not strtok()?
-From the man page: The strtok() function parses a string into a sequence of tokens. On the first call to strtok() the string to be parsed should be specified in str, so it is not thread safe.”  This mean that if more than one thread were to write to this at the same time then it would likely be corrupted.
+	From the man page: The strtok() function parses a string into a sequence of tokens. On the first 
+	call to strtok() the string to be parsed should be specified in str, so it is not thread safe.  
+	This mean that if more than one thread were to write to this at the same time then it would likely 
+	be corrupted.
 
 >> A4: In Pintos, the kernel separates commands into a executable name
 >> and arguments.  In Unix-like systems, the shell does this
@@ -62,14 +71,21 @@ From the man page: The strtok() function parses a string into a sequence of toke
 >> `struct' member, global or static variable, `typedef', or
 >> enumeration.  Identify the purpose of each in 25 words or less.
 
+	None at the monent.
+
 >> B2: Describe how file descriptors are associated with open files.
 >> Are file descriptors unique within the entire OS or just within a
 >> single process?
+
+	When a file is opened it is given a unique ID, meaning that file descriptors are unique for 
+	a single process. When a file is closed the ID can be used again.
 
 ---- ALGORITHMS ----
 
 >> B3: Describe your code for reading and writing user data from the
 >> kernel.
+
+	We are going to make sure everything passed to the functions are vailded before it is used.
 
 >> B4: Suppose a system call causes a full page (4,096 bytes) of data
 >> to be copied from user space into the kernel.  What is the least
@@ -78,8 +94,14 @@ From the man page: The strtok() function parses a string into a sequence of toke
 >> for a system call that only copies 2 bytes of data?  Is there room
 >> for improvement in these numbers, and how much?
 
+	The least amount of calls would be 1, while the most would be 4096 calls for each 
+	byte of data passed in.
+
 >> B5: Briefly describe your implementation of the "wait" system call
 >> and how it interacts with process termination.
+
+	Wait loops over all the current childern processes, waiting for them to complet. If one or 
+	more do complete then that process is removed from the queue. 
 
 >> B6: Any access to user program memory at a user-specified address
 >> can fail due to a bad pointer value.  Such accesses must cause the
@@ -95,12 +117,19 @@ From the man page: The strtok() function parses a string into a sequence of toke
 >> paragraphs, describe the strategy or strategies you adopted for
 >> managing these issues.  Give an example.
 
+	First you want to check to make sure that all values passed into any system call will be vaild.
+	If any values passed are not vaild then nothing is allocated to the system.
+	If a error occurs after passing values then the process is killed, then all alloctated 
+	reasources are freed. 	
+
 ---- SYNCHRONIZATION ----
 
 >> B7: The "exec" system call returns -1 if loading the new executable
 >> fails, so it cannot return before the new executable has completed
 >> loading.  How does your code ensure this?  How is the load
 >> success/failure status passed back to the thread that calls "exec"?
+
+	
 
 >> B8: Consider parent process P with child process C.  How do you
 >> ensure proper synchronization and avoid race conditions when P
@@ -109,16 +138,29 @@ From the man page: The strtok() function parses a string into a sequence of toke
 >> terminates without waiting, before C exits?  After C exits?  Are
 >> there any special cases?
 
+	We are going to make a few function to make sure that parent thread will wait for the child thread
+	to complete. 
+
 ---- RATIONALE ----
 
 >> B9: Why did you choose to implement access to user memory from the
 >> kernel in the way that you did?
 
+	We felt like the way we implemeted access to user memory from the kernel is the easyiest and
+	most straight forward way to do it.
+
 >> B10: What advantages or disadvantages can you see to your design
 >> for file descriptors?
+	Advantages:
+		Very simple and easy to understand
+		
+	Disadvantage:
+		many for the same file are created in our code
 
 >> B11: The default tid_t to pid_t mapping is the identity mapping.
 >> If you changed it, what advantages are there to your approach?
+
+	Didn't change.
 
 			   SURVEY QUESTIONS
 			   ================
